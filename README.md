@@ -1,3 +1,5 @@
+### Tugas 2 ###
+
 link aplikasi PWS: https://fidan-khalil-footballshop.pbp.cs.ui.ac.id/
 
 Langkah-langkah implementasi:
@@ -70,3 +72,61 @@ Alasan framework Django dijadikan permulaan pembelajaran pengembangan perangkata
     2. Django sudah menyediakan perlindungan terhadap serangan umum seperti SQL Injection, XSS, CSRF, dan lain-lain secara otomatis
     3. Django menjadi jembatan ke konsep lanjutan seperti REST API, deployment, dan framework lain.
     4. Django banyak digunakan di industri, seperti Instagram dan Pinterest
+
+
+### Tugas 3 ###
+
+Alasan mengapa kita membutuhkan data delivery dalam pengimplementasian sebuah platform:
+    Karena dalam implementasi sebuah platform, ada kalanya kita membutuhkan data dari stack lain. Oleh karena itu, kita memerlukan data delivery untuk mengirimkan data dari suatu stack ke stack lainnya.
+
+Lebih baik mana antara XML dengan JSON dan mengapa JSON lebih populer dibandingkan XML:
+    Menurut saya lebih baik JSON, karena syntax JSON lebih ringkas dan lebih mudah dibaca oleh manusia dibandingkan syntax XML, dan untuk parsing, JSON lebih ringan dan cepat dibandingkan dengan XML.
+
+    Alasan kenapa JSON lebih populer dibandingkan XML adalah:
+        1. JSON butuh lebih sedikit karakter, sehingga untuk transfer data lebih ringkas dan lebih cepat
+        2. Framework-framework modern lebih mengutamakan JSON dibanding XML
+        3. Syntax JSON lebih mudah dibaca oleh manusia dibanding syntax XML
+
+Fungsi method is_valid():
+    Untuk mengecek apakah data yang dikirim valid (form tidak kosong, tipe field sesuai, dan sesuai dengan aturan-aturan lainnya) atau tidak
+
+Mengapa kita membutuhkan csrf_token saat membuat form di Django dan apa yang terjadi ketika tidak menambahkan csrf_token:
+    csrf_token dibutuhkan untuk memastikan request HTTP dibuat oleh halaman dari web sendiri, bukan dari web jahat yang memaksa browser pengguna request ke web kita. Jika csrf_token tidak ditambahkan tetapi middleware aktif, request akan ditolak (403). Sedangkan jika csrf_token dan middleware dinonaktifkan, penyerang dapat membuat request seakan-akan korban yang sedang login. Hal ini dapat dimanfaatkan oleh penyerang dengan cara penyerang membuat halaman yang memuat form HTML yang membuat request ke server web. Ketika korban mengunjungi halaman yang dibuat oleh penyerang, server akan melihat request sebagai request yang sah dan dapat mengakses web dengan akun korban.
+
+langkah-langkah implementasi:
+    1. Menambahkan 4 fungsi views baru:
+        XML dan JSON:
+            - Membuat sebuah variabel untuk menyimpan hasil query dari seluruh data yang ada pada Product
+
+            - Ubah objek model menjadi format XML atau JSON
+
+            - Lalu fungsi me-return berupa HttpResponse
+        
+        XML by id dan JSON by id:
+            - Membuat sebuah variabel untuk menyimpan hasil query dari data dengan id tertentu
+
+            - Ubah objek model menjadi format XML atau JSON
+
+            - Jika product ditemukan, fungsi akan me-return berupa HttpResponse, sedangkan jika tidak ditemukan, fungsi akan me-return status 404
+
+    2. Routing URL untuk masing-masing views:
+        - Import fungsi-fungsi yang dibuat pada urls.py
+
+        - Membuat path URL ke dalam list urlpatterns untuk mengakses fungsi-fungsi yang sudah di-import
+    
+    3. Membuat halaman yang menampilkan data objek model yang memiliki tombol "Add" yang akan redirect ke halaman form dan tombol "Detail" pada setiap data objek model:
+        - Membuat file forms.py pada direktori main untuk membuat struktur form yang dapat menerima data product baru.
+
+        - Menambahkan fungsi pada file views.py untuk membuat product baru dan menampilkan detail dari product
+
+        - Import fungsi-fungsi yang dibuat pada views.py ke urls.py dan mebambahkan path URL ke list urlpatterns
+
+        - Pada file main.html, menambahkan button "Add" yang akan redirect ke halaman form. Lalu menampilkan semua product yang ada pada product_list yang masing-masing terhubung ke halaman detail dari product
+
+    4. Membuat halaman form:
+        Membuat file HTML baru untuk halaman form input
+
+    5. Membuat halaman detail product:
+        Membuat file HTML baru untuk halaman detail dari product
+
+Akses keempat URL pada postman: https://drive.google.com/drive/folders/1-Vb6tE-PDQb6DARx55CB8C2QZ9W8lu8R?usp=sharing

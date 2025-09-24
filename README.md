@@ -130,3 +130,85 @@ langkah-langkah implementasi:
         Membuat file HTML baru untuk halaman detail dari product
 
 Akses keempat URL pada postman: https://drive.google.com/drive/folders/1-Vb6tE-PDQb6DARx55CB8C2QZ9W8lu8R?usp=sharing
+
+
+### Tugas 4 ###
+
+Apa itu Django AuthenticationForm? dan kelebihan kekurangannya:
+    Django AuthenticationForm adalah form bawaan Django untuk login user. Berguna untuk memvalidasi username dan password, user ada di database, dan akun user aktif.
+
+    Kelebihan:
+        1. Tidak perlu membuat form login manual
+        2. Mudah untuk di-custom
+        3. Sudah menyediakan validasi keamanan
+
+    kekurangan:
+        1. Terbatas untuk username dan password, tidak bisa login menggunakan email atau OTP
+        2. Tidak menyediakan UI, sehingga membutuhkan template sendiri
+
+Perbedaan Autentikasi dan Otorisasi:
+    - Autentikasi = proses memverifikasi identitas user
+    - Otorisasi = proses menentukan hak akses user setelah autentikasi
+
+    Autentikasi di Django menggunakan fungsi authenticate, login, dan logout
+
+    Otorisasi di Django menggunakan @login_required
+
+Kelebihan dan kekurangan session dan cookies:
+    Cookies
+    Kelebihan:
+        1. Tidak membebani server karena data disimpan di client
+        2. Mudah diakses melalui JavaScript
+    
+    Kekurangan:
+        1. Kapasitasnya terbatas
+        2. Rawan untuk dimanipulasi user
+
+    Session
+    Kelebihan:
+        1. Kapasitas lebih besar daripada cookies
+        2. Data lebih aman karena data tidak disimpan di client
+
+    Kekurangan:
+        1. Membebani server
+        2. Memerlukan manajemen session
+
+Apakah cookies aman secara default? dan bagaimana Django menangani hal tersebut?
+    Cookies tidak aman secara default, Django menangani hal ini dengan cara menyediakan:
+        1. SESSION_COOKIE_SECURE = True -> cookie hanya dikirim melalui HTTPS
+        2. SESSION_COOKIE_HTTPONLY = True -> cookie tidak bisa diakses JavaScript
+        3. SESSION_COOKIE_SAMESITE = 'Lax' / 'Strict' -> mencegah CSRF lintas website
+        4. {% csrf_token %}
+
+Langkah-langkah implementasi checklist:
+    1. Membuat fungsi dan form registrasi:
+        - Import UserCreationForm pada views.py
+        - Membuat fungsi register() pada views.py
+        - Membuat halaman untuk register (register.html)
+        - Memetakan fungsi register pada urls.py
+
+    2. Membuat fungsi dan form login:
+        - Import AuthenticationForm, authenticate, login pada views.py
+        - Membuat fungsi login_user() pada views.py
+        - Membuat halaman untuk login (login.html)
+        - Memetakan fungsi login pada urls.py
+
+    3. Membuat fungsi logout:
+        - Import logout pada views.py
+        - Membuat fungsi logout_user() pada views.py
+        - Menambahkan button logout pada main.html
+        - Memetakan fungsi logout pada urls.py
+
+    4. Merestriksi akses halaman main dan product details:
+        - Import login_required pada views.py
+        - Menambahkan @login_required sebelum show_main dan show_product  
+
+    5. Menghubungkan model Product dengan User:
+        - Pada models.py, import User
+        - Pada models.py di dalam class, tambahkan user = models.ForeignKey
+        - Pada views.py, modifikasi method create_product() dan show_main(), sehingga dapat melakukan filter berdasarkan user
+        - Pada main.html, tambahkan button filter
+        - Pada product_details.html, tambahkan nama user  
+
+    6. Membuat 2 akun pengguna dengan masing-masing 3 dummy data:
+        Melakukan registrasi 2 kali untuk membuat 2 akun yang berbeda, lalu masing-masingnya menambahkan 3 dummy data

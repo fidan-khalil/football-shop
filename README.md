@@ -212,3 +212,73 @@ Langkah-langkah implementasi checklist:
 
     6. Membuat 2 akun pengguna dengan masing-masing 3 dummy data:
         Melakukan registrasi 2 kali untuk membuat 2 akun yang berbeda, lalu masing-masingnya menambahkan 3 dummy data
+
+
+### Tugas 5 ###
+
+Urutan prioritas pengambilan CSS selector:
+    1. Inline style
+    2. ID selector
+    3. Class, Attribute selector, dan Pseudo class
+    4. Tag selector
+    5. Urutan muncul
+
+Mengapa responsive design penting? berikan contoh aplikasi yang sudah dan belum menerapkan responsive design:
+    Penting karena responsive design membuat tampilan web menyesuaikan ukuran layar perangkat. Sehingga user dapat mengakses web dengan user experience yang baik.
+
+    Contoh aplikasi yang sudah responsive:
+        - Instagram Web
+        - Tokopedia
+
+    Contoh aplikasi yang belum responsive:
+        - siasisten.cs.ui.ac.id
+
+Perbedaan margin, border, dan padding:
+    padding: area kosong di sekitar konten di dalam border
+    border: garis pembatas antara padding dan margin
+    margin: area kosong di luar border
+
+    cara implementasinya:
+        margin: 10px;
+        border: 1px;
+        padding: 10px;
+
+Konsep flex box dan grid layout:
+    flex box:
+        - Digunakan untuk layout 1 dimensi (horizontal atau vertikal)
+        - Elemen otomatis menyesuaikan ruang kosong
+        - Biasa digunakan untuk navbar dan alignment
+
+    grid layout:
+        - Digunakan untuk layout 2 dimensi (baris dan kolom)
+        - Biasa digunakan untuk menampilkan sebuah list (contoh: produk pada e-commerce)
+
+Langkah-langkah implementasi checklist:
+    Implementasi fungsi untuk menghapus product:
+        1. Pada views.py di folder main tambahkan method delete_product yang menerima parameter request dan id. Lalu cari product tersebut berdasarkan id nya dan product tersebut di-delete product.delete(). Setelah itu, method tersebut me-return HttpResponseRedirect ke main
+
+        2. Lalu pada file urls.py, import fungsi delete_product yang sudah dibuat pada views.py dan membuat path-nya
+
+        3. Setelah itu, pada file card_product.html tambahkan button delete 
+
+    Implementasi fungsi untuk mengedit product:
+        1. Pada views.py di folder main tambahkan method edit_product yang menerima parameter request dan id. Lalu cari product tersebut berdasarkan id-nya dan meminta user untuk isi form untuk merubah data dari product tersebut. Setelah itu, method tersebut me-return redirect ke main
+
+        2. Lalu pada file urls.py, import fungsi edit_product yang sudah dibuat pada views.py dan membuat path-nya
+
+        3. Setelah itu, membuat halaman html untuk edit product
+
+        4. Lalu pada file card_product.html tambahkan button edit product yang terhubung ke halaman edit product
+
+    Kustomisasi desain:
+        1. Tambahkan tailwind ke base.html menggunakan <script src="https://cdn.tailwindcss.com">
+        2. Kustomisasi halaman login, register, tambah product, edit product, dan detail product dengan ketentuan jika pada aplikasi belum ada product yang tersimpan, halaman daftar product akan menampilkan gambar dan pesan bahwa belum ada product yang terdaftar. Jika sudah ada product yang tersimpan, halaman daftar product akan menampilkan detail setiap product dengan menggunakan card
+
+    Buat 2 button untuk mengedit dan menghapus product untuk setiap card_product:
+        pada file card_product, tambahkan button edit yang terhubung ke halaman edit_product. Lalu tambahkan button delete yang berguna untuk menghapus product tersebut.
+
+    Buat navbar:
+        1. Buat file baru navbar.html
+        2. Buat ul (Unordered List) yang di dalamnya terdapat beberapa li (List Item) yang masing-masing terhubung ke fungsinya sendiri
+            - <li>Home</li> terhubung ke halaman utama
+            - <li>Create Product</li> terhubung ke halaman create_product

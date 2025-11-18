@@ -11,8 +11,8 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header Section -->
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Latest Football Product</h1>
-      <p class="text-gray-600">Stay updated with the latest football Product</p>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Perlengkapan Sepak Bola Terkini</h1>
+      <p class="text-gray-600">Seluruh perlengkapan sepak bola terkini, hanya di sini!</p>
     </div>
 
     <!-- Button to open modal -->
@@ -22,14 +22,31 @@
 
     <!-- Filter Section -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-lg border border-gray-200 p-4">
-      <div class="flex space-x-3 mb-4 sm:mb-0">
-        <a id="filter-all" class="bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-700">
-          All Product
-        </a>
-        <a id="filter-my" class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white">
-          My Product
-        </a>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 mb-4 sm:mb-0">
+
+        <!-- Category Dropdown -->
+        <select id="filter-category"
+                class="border border-gray-300 rounded-md px-4 py-2 text-gray-700">
+          <option value="">All Category</option>
+          <option value="sepatu">Sepatu</option>
+          <option value="jersey">Jersey</option>
+          <option value="bola">Bola</option>
+          <option value="sarung tangan">Sarung Tangan</option>
+          <option value="aksesoris">Aksesoris</option>
+        </select>
+
+        <!-- Brand Dropdown -->
+        <select id="filter-brand"
+                class="border border-gray-300 rounded-md px-4 py-2 text-gray-700">
+          <option value="">All Brand</option>
+          <option value="nike">Nike</option>
+          <option value="adidas">Adidas</option>
+          <option value="puma">Puma</option>
+          <option value="new balance">New Balance</option>
+          <option value="under armour">Under Armour</option>
+        </select>
       </div>
+
       {% if user.is_authenticated %}
         <div class="text-sm text-gray-500">Last login: {{ last_login }}</div>
       {% endif %}
@@ -57,7 +74,7 @@
       </div>
       <h3 class="text-lg font-medium text-gray-900 mb-2">No product found</h3>
       <p class="text-gray-500 mb-6">Create football product</p>
-      <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+      <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-4 py-2 bg-[#222831] text-white rounded-md hover:bg-green-700 transition-colors">
         Create Product
       </a>
     </div>
@@ -74,25 +91,11 @@ const loadingSpinner = document.getElementById('loading');
 const errorMessage = document.getElementById('error');
 const emptyStateDisplay = document.getElementById('empty');
 const productGridContainer = document.getElementById('grid');
-const showAllProductButton = document.getElementById('filter-all');
-const showMyProductButton = document.getElementById('filter-my');
 
 // State Variables
-let activeFilter = 'all';
+let selectedCategory = "";
+let selectedBrand = "";
 let allProductData = [];
-
-// Update filter button appearance
-function updateFilterButtonsAppearance() {
-  if (!showAllProductButton || !showMyProductButton) return;
-  
-  if (activeFilter === 'all') {
-    showAllProductButton.className = 'bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-700';
-    showMyProductButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white';
-  } else {
-    showMyProductButton.className = 'bg-green-600 text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-700';
-    showAllProductButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white';
-  }
-}
 
 // Show/hide page sections
 function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
@@ -110,44 +113,50 @@ function displayPageSection({ showLoading = false, showError = false, showEmpty 
 // Get readable category name
 function getReadableCategoryName(categoryCode) {
   const categoryMapping = {
-    transfer: 'Transfer',
-    update: 'Update',
-    exclusive: 'Exclusive',
-    match: 'Match',
-    rumor: 'Rumor',
-    analysis: 'Analysis',
+    sepatu: 'Sepatu',
+    jersey: 'Jersey',
+    bola: 'Bola',
+    sarungTangan: 'Sarung Tangan',
+    aksesoris: 'Aksesoris',
   };
   return categoryMapping[categoryCode] || categoryCode;
 }
 
+// Get readable brand name
+function getReadableBrandName(brandCode) {
+  const brandMapping = {
+    nike: 'Nike',
+    adidas: 'Adidas',
+    puma: 'Puma',
+    newBalance: 'New Balance',
+    underArmour: 'Under Armour',
+  };
+  return brandMapping[brandCode] || brandCode;
+}
+
 // Create Product card element
 function buildProductCardElement(item) {
-  const article = document.createElement('article');
-  article.className = 'bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full';
+  const card = document.createElement('div');
+  card.className = 'bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden flex flex-col h-full';
 
   const linkDetail = `{% url 'main:show_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', item.id);
   const linkEdit = `{% url 'main:edit_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', item.id);
   const linkDelete = `{% url 'main:delete_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', item.id);
 
-  const title = DOMPurify.sanitize(item.title);
-  const content = DOMPurify.sanitize(item.content);
+  const name = DOMPurify.sanitize(item.name);
   const category = DOMPurify.sanitize(item.category);
+  const brand = DOMPurify.sanitize(item.brand);
   const thumbnail = DOMPurify.sanitize(item.thumbnail);
-  const createdAt = DOMPurify.sanitize(new Date(item.created_at).toLocaleDateString('en-US', { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  }));
-  const productViews = DOMPurify.sanitize(item.product_views);
-  const isFeatured = item.is_featured;
-  const isHot = productViews > 20;
+  const price = DOMPurify.sanitize(item.price);
+  const rating = DOMPurify.sanitize(item.rating);
+  const description = DOMPurify.sanitize(item.description);
 
   const thumbnailHtml = DOMPurify.sanitize(
-    item.thumbnail ? `<img src='${thumbnail}' alt='${title}' class='w-full h-full object-cover'>` : `<div class='w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center'></div>`
+    item.thumbnail ? `<img src='${thumbnail}' alt='${name}' class='w-full h-full object-cover'>` : `<div class='w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center'></div>`
   );
+  const brandLabel = DOMPurify.sanitize(getReadableBrandName(brand));
   const categoryLabel = DOMPurify.sanitize(getReadableCategoryName(category));
-  const featuredLabel = isFeatured ? DOMPurify.sanitize(`<span class='inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800'>Featured</span>`) : '';
-  const hotLabel = isHot ? DOMPurify.sanitize(`<span class='inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800'>Hot</span>`) : '';
+  const ratingLabel = DOMPurify.sanitize(`<span class='inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-800'>${rating}</span>`);
 
   const editDeleteHtml = CURRENT_USER_ID && Number(CURRENT_USER_ID) === Number(item.user_id)
     ? `<div class='flex space-x-2'>
@@ -160,23 +169,21 @@ function buildProductCardElement(item) {
     <div class="aspect-[16/9] relative overflow-hidden">
       ${thumbnailHtml}
       <div class="absolute top-3 left-3">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-600 text-white">${categoryLabel}</span>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-green-600 text-white">${brandLabel}</span>
       </div>
       <div class="absolute top-3 right-3 flex space-x-2">
-        ${featuredLabel}
-        ${hotLabel}
+        ${ratingLabel}
       </div>
     </div>
     <div class="p-5 flex flex-col flex-1">
       <div class="flex items-center text-sm text-gray-500 mb-3">
-        <time>${createdAt}</time>
-        <span class="mx-2">•</span>
-        <span>${productViews} views</span>
+        <span>${categoryLabel} views</span>
       </div>
       <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2 leading-tight">
-        <a href="${linkDetail}" class="hover:text-green-600 transition-colors">${title}</a>
+        <a href="${linkDetail}" class="hover:text-green-600 transition-colors">${name}</a>
       </h3>
-      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">${content}</p>
+      <p class="text-green-400 font-semibold text-base mb-4">Rp ${price}</p>
+      <p class="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-4">${description}</p>
       <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
         <a href="${linkDetail}" class="text-green-600 hover:text-green-700 font-medium text-sm transition-colors">Read more</a>
         ${editDeleteHtml}
@@ -184,27 +191,34 @@ function buildProductCardElement(item) {
     </div>
   `;
   
-  article.innerHTML = cardHtml;
-  return article;
+  card.innerHTML = cardHtml;
+  return card;
 }
 
 // Render all Product cards
 function renderAllProductCards(productItems) {
   productGridContainer.innerHTML = '';
+
   productItems.forEach(productItem => {
-  const cardElement = buildProductCardElement(productItem);
-  productGridContainer.appendChild(cardElement);
+    const cardElement = buildProductCardElement(productItem);
+    productGridContainer.appendChild(cardElement);
   });
 }
 
 // Filter and display Product
 function filterAndDisplayProduct() {
-  updateFilterButtonsAppearance();
-  
-  const filteredProduct = activeFilter === 'all' 
-    ? allProductData 
-    : allProductData.filter(product => Number(product.user_id) === Number(CURRENT_USER_ID));
-  
+  let filteredProduct = allProductData;
+
+  // Filter by category
+  if (selectedCategory !== "") {
+    filteredProduct = filteredProduct.filter(p => p.category === selectedCategory);
+  }
+
+  // Filter by brand
+  if (selectedBrand !== "") {
+    filteredProduct = filteredProduct.filter(p => p.brand === selectedBrand);
+  }
+
   if (filteredProduct.length === 0) {
     displayPageSection({ showEmpty: true });
   } else {
@@ -236,21 +250,17 @@ async function fetchProductFromServer() {
   }
 }
 
-// Event handlers
-function handleShowAllProductClick() {
-  activeFilter = 'all';
-  filterAndDisplayProduct();
-}
-
-function handleShowMyProductClick() {
-  activeFilter = 'my';
-  filterAndDisplayProduct();
-}
-
 // Initialize page
 function initializeProductPage() {
-  showAllProductButton.addEventListener('click', handleShowAllProductClick);
-  showMyProductButton.addEventListener('click', handleShowMyProductClick);
+  document.getElementById("filter-category").addEventListener("change", (e) => {
+    selectedCategory = e.target.value;
+    filterAndDisplayProduct();
+  });
+
+  document.getElementById("filter-brand").addEventListener("change", (e) => {
+    selectedBrand = e.target.value;
+    filterAndDisplayProduct();
+  });
   
   fetchProductFromServer();
 }

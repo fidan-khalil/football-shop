@@ -48,7 +48,6 @@ def create_product(request):
 @login_required(login_url='/login')
 def show_product(request, id):
     product = get_object_or_404(Product, pk=id)
-    product.increment_views()
 
     context = {
         'product': product
@@ -84,12 +83,13 @@ def show_json(request):
         {
             'id': str(product.id),
             'name': product.name,
-            'price': product.price,
-            'description': product.description,
-            'thumbnail': product.thumbnail,
             'category': product.category,
-            'product_views': product.product_views,
-            'is_featured': product.is_featured
+            'brand': product.brand,
+            'thumbnail': product.thumbnail,
+            'price': product.price,
+            'rating': product.rating,
+            'description': product.description,
+            'user_id': product.user.id
         }
         for product in product_list
     ]
@@ -107,14 +107,16 @@ def show_json_by_id(request, product_id):
    try:
        product = Product.objects.select_related('user').get(pk=product_id)
        data = {
-           'id': str(product.id),
+            'id': str(product.id),
             'name': product.name,
-            'price': product.price,
-            'description': product.description,
-            'thumbnail': product.thumbnail,
             'category': product.category,
-            'product_views': product.product_views,
-            'is_featured': product.is_featured
+            'brand': product.brand,
+            'thumbnail': product.thumbnail,
+            'price': product.price,
+            'rating': product.rating,
+            'description': product.description,
+            'user_id': product.user.id,
+            'user_username': product.user.username,
        }
        return JsonResponse(data)
    except Product.DoesNotExist:
@@ -129,6 +131,9 @@ def register(request):
             form.save()
             messages.success(request, 'Your account has been successfully created!')
             return redirect('main:login')
+        
+        else:
+            messages.error(request, "Registration failed. Please check the form.")
     context = {'form':form}
     return render(request, 'register.html', context)
 
@@ -139,9 +144,13 @@ def login_user(request):
       if form.is_valid():
         user = form.get_user()
         login(request, user)
+        messages.success(request, "Login successful!")
         response = HttpResponseRedirect(reverse("main:show_main"))
         response.set_cookie('last_login', str(datetime.datetime.now()))
         return response
+      
+      else:
+          messages.error(request, "Invalid username or password.")
 
    else:
       form = AuthenticationForm(request)
@@ -150,6 +159,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
+    messages.success(request, "Logout successful!")
     response = HttpResponseRedirect(reverse('main:login'))
     response.delete_cookie('last_login')
     return response
@@ -158,22 +168,22 @@ def logout_user(request):
 @require_POST
 def add_product_entry_ajax(request):
     name = strip_tags(request.POST.get("name"))
-    price = request.POST.get("price")
-    description = strip_tags(request.POST.get("description"))
-    thumbnail = request.POST.get("thumbnail")
     category = request.POST.get("category")
-    product_views = request.POST.get("product_views")
-    is_featured = request.POST.get("is_featured") == 'on'  # checkbox handling
+    brand = request.POST.get("brand")
+    thumbnail = request.POST.get("thumbnail")
+    price = request.POST.get("price")
+    rating = request.POST.get("rating")
+    description = strip_tags(request.POST.get("description"))
     user = request.user
 
     new_product = Product(
-        name=name, 
-        price=price,
-        description=description,
+        name=name,
         category=category,
-        product_views=product_views,
-        thumbnail=thumbnail,
-        is_featured=is_featured,
+        brand=brand,
+        thumbnail=thumbnail, 
+        price=price, 
+        rating=rating,
+        description=description,
         user=user
     )
     new_product.save()

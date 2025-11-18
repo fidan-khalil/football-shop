@@ -16,38 +16,61 @@
         <span class="sr-only">Close modal</span>
       </button>
     </div>
+
     <!-- Modal body -->
     <div class="px-6 py-4 space-y-6 form-style">
       <form id="productForm">
         <div class="mb-4">
-          <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-          <input type="text" id="title" name="title" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product title" required>
+          <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+          <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product title" required>
         </div>
-        <div class="mb-4">
-          <label for="content" class="block text-sm font-medium text-gray-700">Content</label>
-          <textarea id="content" name="content" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product content" required></textarea>
-        </div>
+
         <div class="mb-4">
           <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
           <select id="category" name="category" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required>
             <option value="">Choose a category</option>
-            <option value="transfer">Transfer</option>
-            <option value="update">Update</option>
-            <option value="exclusive">Exclusive</option>
-            <option value="match">Match</option>
-            <option value="rumor">Rumor</option>
-            <option value="analysis">Analysis</option>
+            <option value="sepatu">Sepatu</option>
+            <option value="jersey">Jersey</option>
+            <option value="bola">Bola</option>
+            <option value="sarungTangan">Sarung Tangan</option>
+            <option value="aksesoris">Aksesoris</option>
           </select>
         </div>
+
+        <div class="mb-4">
+          <label for="brand" class="block text-sm font-medium text-gray-700">Brand</label>
+          <select id="brand" name="brand"
+                  class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" required>
+            <option value="">Choose a brand</option>
+            <option value="nike">Nike</option>
+            <option value="adidas">Adidas</option>
+            <option value="puma">Puma</option>
+            <option value="new balance">New Balance</option>
+            <option value="under armour">Under Armour</option>
+          </select>
+        </div>
+
         <div class="mb-4">
           <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail URL</label>
           <input type="url" id="thumbnail" name="thumbnail" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="https://example.com/image.jpg">
         </div>
+
+          <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+          <input type="number" id="price" name="price" min="0"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                 placeholder="Enter price (e.g., 250000)" required>
+        </div>
+
         <div class="mb-4">
-          <div class="flex items-center">
-            <input id="is_featured" name="is_featured" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
-            <label for="is_featured" class="ml-2 text-sm font-medium text-gray-900">Featured Product</label>
-          </div>
+          <label for="rating" class="block text-sm font-medium text-gray-700">Rating (0.0 - 5.0)</label>
+          <input type="number" step="0.1" min="0" max="5" id="rating" name="rating"
+                 class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                 placeholder="4.5" required>
+        </div>
+
+        <div class="mb-4">
+          <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea id="description" name="description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product content" required></textarea>
         </div>
       </form>
     </div>
@@ -101,7 +124,7 @@
     return false;
   }
 
-  document.getElementById("newsForm").addEventListener("submit", function(e) {
+  document.getElementById("productForm").addEventListener("submit", function(e) {
     e.preventDefault();
     addProductEntry();
 })

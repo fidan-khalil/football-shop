@@ -11,7 +11,7 @@
     
     <!-- Back Navigation -->
     <div class="mb-6">
-      <a href="{% url 'main:show_product' %}" class="text-[#EEEEEE]-600 hover:text-[#EEEEEE]-900 font-medium transition-colors">
+      <a href="{% url 'main:show_main' %}" class="text-[#EEEEEE]-600 hover:text-[#EEEEEE]-900 font-medium transition-colors">
         ← Back to Products
       </a>
     </div>
@@ -43,7 +43,7 @@
         {% endfor %}
         
         <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
-          <a href="{% url 'main:show_product' %}" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-[#EEEEEE] rounded-md font-medium hover:bg-[#393E46] transition-colors text-center">
+          <a href="{% url 'main:show_main' %}" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-[#EEEEEE] rounded-md font-medium hover:bg-[#393E46] transition-colors text-center">
             Cancel
           </a>
           <button type="submit" class="order-1 sm:order-2 flex-1 bg-[#00ADB5] text-white px-6 py-3 rounded-md font-medium hover:bg-green-700 transition-colors">

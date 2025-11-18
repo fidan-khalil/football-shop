@@ -35,55 +35,54 @@
         </div>
         
         <!-- Article Content -->
-        <article id="article-content" class="bg-white rounded-lg border border-gray-200 overflow-hidden hidden">
+        <article id="product-content" class="bg-white rounded-lg border border-gray-200 overflow-hidden hidden">
             
             <!-- Header -->
             <div class="p-6 sm:p-8">
-                <div id="badges-container" class="flex flex-wrap items-center gap-2 mb-4">
-                    <!-- Dynamic badges will be inserted here -->
-                </div>
-                
-                <h1 id="article-title" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
-                    <!-- Title will be inserted here -->
-                </h1>
-                
-                <div class="flex flex-wrap items-center text-sm text-gray-500 gap-4">
-                    <time id="article-date">
-                        <!-- Date will be inserted here -->
-                    </time>
-                    <span id="article-views">
-                        <!-- Views will be inserted here -->
-                    </span>
-                </div>
+                <div id="badge-container" class="flex flex-wrap items-center gap-2 mb-4"></div>
+
+                <!-- Product Name -->
+                <h1 id="product-name" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4"></h1>
             </div>
 
-            <!-- Featured Image -->
-            <div id="featured-image-container" class="px-6 sm:px-8 hidden">
-                <img id="featured-image" 
-                     src="" 
-                     alt="" 
+            <!-- Thumbnail -->
+            <div id="thumbnail-container" class="px-6 sm:px-8 hidden">
+                <img id="thumbnail-image"
+                     src=""
+                     alt=""
                      class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
             </div>
 
             <!-- Content -->
             <div class="p-6 sm:p-8">
-                <div class="prose prose-lg max-w-none">
-                    <div id="article-content-text" class="text-gray-700 leading-relaxed whitespace-pre-line text-base sm:text-lg">
-                        <!-- Content will be inserted here -->
+                <div class="space-y-4">
+
+                    <!-- Description -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-1">Description</h2>
+                        <p id="product-description" class="text-gray-700 leading-relaxed"></p>
                     </div>
+
+                    <!-- Price -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-1">Price</h2>
+                        <p id="product-price" class="text-green-600 font-bold text-xl"></p>
+                    </div>
+
+                    <!-- Rating -->
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 mb-1">Rating</h2>
+                        <span id="product-rating"
+                              class="inline-flex items-center px-3 py-1 rounded text-sm font-medium bg-red-100 text-red-800"></span>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- Author Info -->
+            <!-- Author -->
             <div class="border-t border-gray-200 p-6 sm:p-8 bg-gray-50">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <div class="font-medium text-gray-900">
-                            <p id="article-author">Author: Loading...</p>
-                        </div>
-                        <p class="text-sm text-gray-500">Author</p>
-                    </div>
-                </div>
+                <p id="product-author" class="text-gray-700 font-medium"></p>
+                <p class="text-sm text-gray-500">Owner of Product</p>
             </div>
         </article>
     </div>
@@ -97,93 +96,86 @@ const PRODUCT_DETAIL_ENDPOINT = `{% url 'main:show_json_by_id' '00000000-0000-00
 // DOM Elements
 const loadingState = document.getElementById('loading-state');
 const errorState = document.getElementById('error-state');
-const articleContent = document.getElementById('article-content');
-const badgesContainer = document.getElementById('badges-container');
-const articleTitle = document.getElementById('article-title');
-const articleDate = document.getElementById('article-date');
-const articleViews = document.getElementById('article-views');
-const featuredImageContainer = document.getElementById('featured-image-container');
-const featuredImage = document.getElementById('featured-image');
-const articleContentText = document.getElementById('article-content-text');
-const articleAuthor = document.getElementById('article-author');
+const productContent = document.getElementById('product-content');
+
+const nameEl = document.getElementById("product-name");
+const descriptionEl = document.getElementById("product-description");
+const priceEl = document.getElementById("product-price");
+const ratingEl = document.getElementById("product-rating");
+
+const badgeContainer = document.getElementById("badge-container");
+
+const thumbnailContainer = document.getElementById("thumbnail-container");
+const thumbnailImage = document.getElementById("thumbnail-image");
+
+const authorEl = document.getElementById("product-author");
 
 // Show/hide page sections
 function showState(state) {
     loadingState.classList.toggle('hidden', state !== 'loading');
     errorState.classList.toggle('hidden', state !== 'error');
-    articleContent.classList.toggle('hidden', state !== 'ready');
+    productContent.classList.toggle('hidden', state !== 'ready');
 }
 
 // Get readable category name
 function getCategoryLabel(categoryCode) {
     const categoryMapping = {
-        transfer: 'Transfer',
-        update: 'Update',
-        exclusive: 'Exclusive',
-        match: 'Match',
-        rumor: 'Rumor',
-        analysis: 'Analysis',
+        sepatu: 'Sepatu',
+        jersey: 'Jersey',
+        bola: 'Bola',
+        sarungTangan: 'Sarung Tangan',
+        aksesoris: 'Aksesoris'
     };
     return categoryMapping[categoryCode] || categoryCode;
 }
 
+// Get readable brand name
+function getBrandLabel(brandCode) {
+    const brandMapping = {
+        nike: 'Nike',
+        adidas: 'Adidas',
+        puma: 'Puma',
+        newBalance: 'New Balance',
+        underArmour: 'Under Armour'
+    };
+    return brandMapping[brandCode] || brandCode;
+}
+
 // Render article content
-function renderArticle(product) {
+function renderProduct(product) {
     // Set title
-    articleTitle.textContent = product.title;
-    document.title = `${product.title} - Football Product`;
-    
+    nameEl.textContent = product.name;
+    descriptionEl.textContent = product.description;
+    priceEl.textContent = "Rp " + Number(product.price).toLocaleString();
+    ratingEl.textContent = product.rating;
+
     // Set badges
-    badgesContainer.innerHTML = '';
+    badgeContainer.innerHTML = '';
     
     // Category badge
     const categoryBadge = document.createElement('span');
     categoryBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-600 text-white';
     categoryBadge.textContent = getCategoryLabel(product.category);
-    badgesContainer.appendChild(categoryBadge);
-    
-    // Featured badge
-    if (product.is_featured) {
-        const featuredBadge = document.createElement('span');
-        featuredBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800';
-        featuredBadge.textContent = 'Featured';
-        badgesContainer.appendChild(featuredBadge);
-    }
-    
-    // Hot badge
-    if (product.product_views > 20) {
-        const hotBadge = document.createElement('span');
-        hotBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800';
-        hotBadge.textContent = 'Hot';
-        badgesContainer.appendChild(hotBadge);
-    }
-    
-    // Set date and views
-    const formattedDate = new Date(product.created_at).toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    articleDate.textContent = formattedDate;
-    articleViews.textContent = `${product.product_views} views`;
+    badgeContainer.appendChild(categoryBadge);
+
+    // Brand badge
+    const brandBadge = document.createElement('span');
+    brandBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-600 text-white';
+    brandBadge.textContent = getBrandLabel(product.brand);
+    badgeContainer.appendChild(brandBadge);
     
     // Set featured image
     if (product.thumbnail) {
-        featuredImage.src = product.thumbnail;
-        featuredImage.alt = product.title;
-        featuredImageContainer.classList.remove('hidden');
+        thumbnailImage.src = product.thumbnail;
+        thumbnailImage.alt = product.title;
+        thumbnailImage.classList.remove('hidden');
     } else {
         featuredImageContainer.classList.add('hidden');
     }
     
-    // Set content
-    articleContentText.textContent = product.content;
-    
     // Set author
     const authorName = product.user_username || 'Anonymous';
-    articleAuthor.textContent = `Author: ${authorName}`;
+    authorEl.textContent = `Author: ${authorName}`;
 }
 
 // Fetch Product detail
@@ -200,7 +192,7 @@ async function loadProductDetail() {
         }
 
         const productData = await response.json();
-        renderArticle(productData);
+        renderProduct(productData);
         showState('ready');
     } catch (error) {
         console.error('Error loading product detail:', error);

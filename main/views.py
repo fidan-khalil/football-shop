@@ -97,6 +97,23 @@ def show_json(request):
     ]
     return JsonResponse(data, safe=False)
 
+def show_json_my(request):
+    product_list = Product.objects.filter(user=request.user)
+    data = [{
+        'id': str(product.id),
+        'name': product.name,
+        'category': product.category,
+        'brand': product.brand,
+        'thumbnail': product.thumbnail,
+        'price': product.price,
+        'rating': str(product.rating),
+        'description': product.description,
+        'user_id': product.user.id,
+    } for product in product_list]
+
+    return JsonResponse(data, safe=False)
+
+
 def show_xml_by_id(request, product_id):
    try:
        product_item = Product.objects.filter(pk=product_id)
@@ -211,7 +228,7 @@ def proxy_image(request):
         return HttpResponse(f'Error fetching image: {str(e)}', status=500)
     
 @csrf_exempt
-def create_product_flutter(request):
+def create_flutter(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
